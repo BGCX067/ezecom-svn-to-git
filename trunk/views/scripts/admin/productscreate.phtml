@@ -1,0 +1,232 @@
+<?php
+$data = $this->data; 
+$brands = $this->Brands;
+$categories = $this->Categories;
+$heading = isset($data['ProductID']) ? "Edit Product" : "Create Product";
+
+?>
+<h2><?php echo $heading; ?></h2>
+<form action="/admin/productscreate/" method="POST">
+	<?php 
+	if (isset($data['ProductID']) ) { ?>
+	<input type="hidden" name="ProductID" value="<?php echo $date = ( isset($data['ProductID']) ? $data['ProductID'] : '' ); ?>" />
+	<?php } ?>
+	<input type="hidden" name="Created" value="<?php echo $date = ( isset($data['Created']) ? $data['Created'] : Date('Y-m-d H:i:s')); ?>" />
+	<input type="hidden" name="LastEdited" value="<?php echo Date('Y-m-d H:i:s'); ?>" />
+
+	<table>
+	<tr>
+		<td><label for="Name">Product Name</label></td>
+		<td><input type="text" size="100" name="Name" value="<?php echo $Name = (isset($data['Name'])) ? $data['Name'] : '' ;?>" /></td>
+	</tr>
+	<tr>
+		<td><label for="URLSegment">URLSegment</label></td>
+		<td><input type="text" size="100" name="URLSegment" class="create-urlsegment" disabled="disabled" value="<?php echo $URLSegment = (isset($data['URLSegment'])) ? $data['URLSegment'] : '' ;?>" /> <a class="edit_url" href="javascript:;">edit</a></td>
+	</tr>	
+	<tr>
+		<td><label for="Code">Product Code</label></td>
+		<td><input type="text" size="100" name="Code" value="<?php echo $Code = (isset($data['Code'])) ? $data['Code'] : '' ;?>" /></td>
+	</tr>	
+	<tr>
+		<td><label for="Description">Description</label></td>
+		<td><textarea name="Description" rows="13" cols="100"><?php echo $Description = (isset($data['Description'])) ? $data['Description'] : '' ;?></textarea></td>
+	</tr>
+	<tr>
+		<td><label for="price">Brand</label></td>
+		<td>
+			<select name="BrandID">
+				<option value=""></option>
+				<?php foreach ($brands as $row) { 
+				$selected =  ( $row['ID'] == $data['BrandID'] ? "selected='selected'" : "" ) ; 
+				?> 
+				<option value="<?php echo $row['ID'];?>"  <?php echo $selected; ?> /><?php echo ucwords($row['Name']); ?></option>
+				<?php } 
+				$selected = "";
+				?> 
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><label for="Price">Retail Price</label></td>
+		<td><input type="text" size="5" name="Price" value="<?php echo $Price = (isset($data['Price'])) ? $data['Price'] : '' ;?>" /></td>
+	</tr>
+	<tr>	
+		<td><label for="DiscPrice">Wholesale Price</label></td>
+		<td><input type="text" name="DiscPrice" value="<?php echo $DiscPrice = (isset($data['DiscPrice'])) ? $data['DiscPrice'] : '' ;?>" /></td>
+	</tr>
+	<tr>	
+		<!-- <td><label for="DiscRate">Discounted Rate</label></td> -->
+		<td><input type="hidden" name="DiscRate" value="<?php echo $DiscRate = (isset($data['DiscRate'])) ? $data['DiscRate'] : '' ;?>" /></td>
+	</tr>
+	<tr>	
+		<td><label for="DiscRate">Quantity</label></td>
+		<td><input type="text" name="Quantity" size="5" value="<?php echo $Quantity = (isset($data['Quantity'])) ? $data['Quantity'] : 1 ;?>" /></td>
+	</tr>
+	
+	<tr>
+		<?php
+			$checked = '';	
+			if (isset($data['isFeatured']) && $data['isFeatured'] == 1)  {
+				$checked = 'checked';
+		?>
+			<input type="hidden" name="isFeatured" value="0" />
+		<?php	
+			}
+		?>
+		<td><label for="isFeatured">isFeatured</label></td>
+		<td><input type="checkbox" name="isFeatured" <?php echo $checked;?> value="1" /></td>
+	</tr>
+	</table>
+	
+	<input type="submit" class="button blue" value="Save Changes" />
+</form>
+
+<h2>Product Categories</h2>
+<?php
+$product_categories = $this->product_categories;
+//echo '<pre>'; print_r($product_categories); exit;
+$cat_array = array();
+
+foreach ($product_categories as $cat) {
+	$cat_array[] = $cat['CategoryID'];
+}
+?>
+
+
+<div>
+<form action="/admin/productscategories" method="POST">
+<input type="hidden" name="ProductID" value="<?php echo $data['ProductID'];?>" />
+<?php foreach ($categories as $row) { 
+$checked =  ( in_array($row['ID'], $cat_array)   ? "checked" : "" ) ; 
+ if ($row['isPrimary'] ==1) {
+	$Category = '<strong style="color:#990000">'.ucwords($row['Name']).'</strong>';
+ } else {
+	$Category = ucwords($row['Name']);
+ }
+?>
+<input type="checkbox" name="CategoryID[]" value="<?php echo $row['ID'];?>" <?php echo $checked; ?> />
+<?php echo $Category; ?>
+<?php } ?>
+<input type="submit" value="Set Categories" />
+</form>
+</div>
+
+<h2>Product Attributes</h2>
+
+<?php
+if($this->product_attributes) {  ?>
+<table class="tablesorter">
+	<thead>
+		<th>Attribute</th>	
+		<th>Values</th>	
+		<th>&nbsp;</th>
+	</thead>
+<?php $product_attributes = $this->product_attributes;
+	foreach ($product_attributes as $attribute) { ?>
+	<tr>
+		<td><?php echo $attribute['Name'];?></td>
+		<td><?php echo $attribute['Attributes'];?></td>	
+		<td><a class="jq_delete" href="/admin/productsattributes/?pid=<?php echo $data['ProductID'];?>&paid=<?php echo $attribute['ID'];?>&delete=1">DELETE</a></tr>
+	<?php } ?>
+</table>	
+<?php } ?>
+
+<?php
+if (isset($data['ProductID']) ) {
+?>
+<a href="javascript:;" class="add_attribute">Add Product Attribute</a>
+<div class="AttributeForm" style="display:none">
+<table>
+<form method="POST" action="/admin/productsattributes">
+<input type="hidden" name="ProductID" value="<?php echo $data['ProductID'];?>" />
+	<tr>
+		<td>Name</td>
+		<td><input type="text" name="Name" size="60"/></td>
+	</tr>
+	<tr>
+		<td>Attributes (separate by comma)</td>
+		<td><textarea name="Attributes" rows="7" cols="50"></textarea></td>
+	</tr>
+	<tr>	
+		<td><input type="submit" value="Add Attribute" /></td>
+	</tr>
+</form>
+</table>
+</div>
+<?php
+} else {
+?>
+You can add attributes after you save the Item.
+<?php
+}
+?>
+
+
+<h2>Product Images </h2>
+
+<?php
+if (isset($data['ProductID']) ) {
+?>
+
+<form id="imageform" method="POST" enctype="multipart/form-data" action="/admin/uploadimage">
+	<input type="hidden" name="ProductID" value="<?php echo $data['ProductID'];?>" />
+	<input id="file" name="file[]" type="file" multiple />
+	<input type="submit" value="Upload Image" class="button blue" />
+</form>	
+<?php
+} else {
+?>
+You can add pictures after you save the Item.
+<?php
+}
+?>
+
+<?php
+
+if($this->images) {
+
+//echo '<pre>'; print_r($this->images); exit;
+
+$images = $this->images;
+
+	foreach ($images as $image) {
+?>
+<form method="POST" action="/admin/deleteimage">
+<input type="hidden" name="ProductID" value="<?php echo $data['ProductID']; ?>" />
+<input type="hidden" name="ProductImageID" value="<?php echo $image['ID']; ?>" />
+<input type="hidden" name="Filename" value="<?php echo $image['Filename']; ?>" />
+<img src="<?php echo "/uploads/thumbs/th_".$image['Filename'];?>" />
+<p><input type="submit" value="Remove Image" class="button orange"></p>
+</form>
+
+<?php 	if ($image['isPrimary'] != 1) { ?>
+<form method="POST" action="/admin/primaryimage">
+	<input type="hidden" name="ProductImageID" value="<?php echo $image['ID']; ?>" />
+	<input type="hidden" name="ProductID" value="<?php echo $data['ProductID']; ?>" /> 
+	<p><input type="submit" value="Make Primary" class="button orange"></p>
+</form>
+<?php
+		} 
+		else { ?>
+		<p><strong>Primary Image</strong></p>
+<?php
+		}
+	}
+	
+}
+?>
+
+<script>
+$(document).ready(function(){
+	$('a.add_attribute').click(function(){		
+		$('.AttributeForm').toggle();
+	})
+});	
+</script>
+<script>
+$(document).ready(function(){
+	$('a.edit_url').click(function(){		
+		$('.create-urlsegment').removeAttr('disabled');
+	})
+});	
+</script>

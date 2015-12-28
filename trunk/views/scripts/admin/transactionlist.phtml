@@ -1,0 +1,98 @@
+<h3>Transactions</h3>
+
+<?php include("includes/transactionform.php") ;?>
+
+<?php
+if (count($this->list) > 0) {
+?>
+<table class="tablesorter" width="100%">
+<thead>
+	<tr>
+		<th >Transaction #</th>
+		<th >Date Ordered</th>
+		<th >Due Date</th>
+		<th >Total</th>
+		<th >Payment</th>
+		<th >Payment Status</th>
+		<th >Status</th>
+		
+	</tr>
+</thead>
+<tbody>
+<?php
+$list = $this->list;
+foreach ($list as $row => $val){
+
+$Status = 'Pending';
+	switch ($val['Status']){
+		case 1:
+			$Status = 'Pending';
+			break;
+		case 2:
+			$Status = 'In Process';
+			break;	
+		case 3:
+			$Status = 'Shipped';
+			break;	
+		default:
+			$Status = 'Pending';
+			break;
+	}
+	
+$PaymentMethod = '';
+	switch ($val['PaymentMethod']){
+		case 1:
+			$PaymentMethod = 'GCASH';
+			break;
+		case 2:
+			$PaymentMethod = 'BDO';
+			break;			
+		case 3:
+			$PaymentMethod = 'BPI';
+			break;	
+		case 4:
+			$PaymentMethod = 'LBC';
+			break;	
+		default:
+			$PaymentMethod = '';
+			break;
+	}	
+	
+$PaymentStatus = 'Not Paid';
+	switch ($val['PaymentStatus']){
+		case 1:
+			$PaymentStatus = 'Marked As Payment Sent';
+			break;
+		case 2:
+			$PaymentStatus = 'Payment Verified';
+			break;		
+		
+		default:
+			$PaymentStatus = 'Not Paid';
+			break;
+	}	
+?>
+
+	<tr>
+		<td ><a href="/admin/transactiondisplay/ID/<?php echo $val['ID']; ?>"><?php echo strtoupper($val['ID']); ?></a></td>
+		<td ><a href="/admin/transactiondisplay/ID/<?php echo $val['ID']; ?>"><?php echo $val['Created']; ?></a></td>
+		<td ><a href="/admin/transactiondisplay/ID/<?php echo $val['ID']; ?>"><?php echo $val['PaymentDue']; ?></a></td>						
+		<td><a href="/admin/transactiondisplay/ID/<?php echo $val['ID']; ?>"><?php echo number_format($val['TransactionTotal'],2); ?></a></td>
+		<td><a href="/admin/transactiondisplay/ID/<?php echo $val['ID']; ?>"><?php echo $PaymentMethod; ?></a></td>
+		<td><a href="/admin/transactiondisplay/ID/<?php echo $val['ID']; ?>"><?php echo $PaymentStatus; ?></a></td>
+		<td><a href="/admin/transactiondisplay/ID/<?php echo $val['ID']; ?>"><?php echo $Status; ?></a></td>
+	</tr>
+<?php
+}
+?>
+</tbody>
+</table>
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+No records found.
+<?php
+}
+?>

@@ -1,0 +1,42 @@
+<h3>Inquiries</h3>
+<?php
+if ($this->list) {
+?>
+<table class="tablesorter">
+<thead>
+				<tr>
+					<th >Email</th>
+					<th >Name</th>
+					<th >Date</th>					
+					<th >Action</th>
+				</tr>
+</thead>
+<tbody>
+<?php
+$list = $this->list;
+foreach ($list as $row => $val){
+?>
+
+	<tr>
+		<td ><a href="#"><?php echo $val['Email']; ?></a></td>			
+		<td ><a href="#"><?php echo strtoupper($val['Firstname']).' '.strtoupper($val['Lastname']); ?></a></td>			
+		<td ><a href="#"><?php echo $val['Created']; ?></a></td>
+		
+		<td>
+			<a href="/admin/inquiriesdisplay/ID/<?php echo $val['ID']; ?>/conf/1" class="button blue">View</a>
+		</td>
+	</tr>
+<?php
+}
+?>
+</tbody>
+</table>
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+No records found.
+<?php
+}
+?>

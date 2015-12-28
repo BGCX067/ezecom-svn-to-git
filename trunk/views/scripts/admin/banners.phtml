@@ -1,0 +1,82 @@
+<h3>Banners</h3>
+
+<form id="imageform" method="POST" enctype="multipart/form-data" action="/admin/banners/">
+	<p>Title : <input type="text" size="60" name="Title" value="" /></p>
+	<p>Link : <input type="text" size="60" name="URLSegment" value="" /></p>
+	<p>Select File: <input id="file" name="file[]" type="file" /></p>
+	<p><input type="submit" value="Upload Image" class="button blue" /></p>
+</form>	
+
+<?php
+
+if($this->uploaded_files) {
+	foreach($this->uploaded_files as $row => $file) {
+	?>
+		<img src="/uploads/thumbs/th_<?php echo $file['Filename']; ?>" />
+		<p>Your file has been successfully uploaded. </p>
+	<?php
+	}
+}
+?>
+
+<?php
+/***
+    [0] => Array
+        (
+            [ID] => 10
+            [Created] => 2013-06-08 22:39:23
+            [LastEdited] => 2013-06-08 22:39:23
+            [Title] => tet
+            [URLSegment] => yahoo.com
+            [CustomOrder] => 0
+            [FileID] => 10
+            [Filename] => _banner51b3421bcfe96.jpg
+        )
+
+***/
+
+?>
+
+<?php
+if ($this->list) {
+?>
+<table class="tablesorter">
+<thead>
+	<tr>
+		<th>&nbsp;</th>
+		<th>Filename</th>
+		<th>Link</th>
+		<th>Order</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+$list = $this->list;
+foreach ($list as $row => $val){
+?>
+
+	<tr>
+		<td><img src="<?php echo "/uploads/thumbs/th_".$val['Filename'];?>" alt=""> </td>
+		<td><a href="/admin/banners/edit/<?php echo $val['ID']; ?>"><?php echo $val['Filename']; ?></a></td>
+		<td><?php echo $val['URLSegment'];?></td>
+		<td><?php echo $val['CustomOrder'];?></td>
+		<td>
+		<a href="/admin/banners/edit/<?php echo $val['ID']; ?>/conf/1" class="button blue">Edit</a> |
+		<a href="/admin/banners/delete/<?php echo $val['ID']; ?>/conf/1" class="button orange jq_delete">Delete</a></td>
+	</tr>
+<?php
+}
+?>
+</tbody>
+</table>
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+No records found.
+<?php
+}
+?>
+

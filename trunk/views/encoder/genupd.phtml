@@ -1,0 +1,55 @@
+<?php 
+
+//print_r($_SERVER);
+//print_r($this->data);
+
+$knkv = $this->knkv;
+
+?>
+
+<h3>Data Update</h3>
+
+
+<form id="generic" action="/encoder/genupd/tbl/<?php echo $knkv['tbl'];?>/kn/<?php echo $knkv['kn']; ?>/kv/<?php echo $knkv['kv']; ?>/submit/1" method="post">
+
+<input type="hidden" name="LastEdited" value="<?php echo Date('Y-m-d H:i:s'); ?>" />
+
+<table>
+<?php 
+
+	foreach ($this->data as $key => $val)
+	{
+	
+		$num = 1;
+		
+		foreach($val as $kk => $vv)	{
+		
+		$keycount = $num++;
+		
+			#$fieldval = "";
+			
+			if($keycount > 1) {
+			
+				if($kk != 'Created' && $kk != 'LastEdited') {
+			
+				echo "<tr>";	
+							
+				echo '<td>'.$kk.'</td>';
+				echo '<td> <input type="text" name="'.$kk.'" value ="'.$vv.'" /> </td>';
+				
+				echo "</tr>";			
+				
+				}
+			
+			}
+			
+		}
+
+	}
+
+
+?>
+
+</table>
+
+<input type="submit" value="save" class="button blue" />

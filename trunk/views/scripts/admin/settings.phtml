@@ -1,0 +1,66 @@
+<h3>Settings</h3>
+
+<h4>Banners</h4>
+<p><a href="/admin/banners">Upload Banners</a><p>
+
+<h4>Menus</h4>
+
+<p><a href="/page/menu">Setup Menus</a><p>
+
+
+<h4> Shipping Fees </h4>
+<p><a href="/encoder/genform/tbl/Shipping">Shipping Table</a></p>
+
+<h4>Widgets</h4>
+<table class="tablesorter" >
+
+
+<?php if ($this->widgetblurbs) { ?>
+<form action="/admin/settings" method="POST">
+<?php foreach ($this->widgetblurbs as $blurb) { ?>
+<input type="hidden" value="1" name="widgetblurb" />
+	<tr>
+		<td>Blurb Widget:</td>
+		<td>
+		<select name="PageID[<?php echo $blurb['ID']; ?>]">
+			<option value=""></option>
+			<?php
+			foreach ($this->pagetitles as $row) { 
+			$selected = ($row['ID'] == $blurb['PageID']) ? 'selected="selected"': '';
+			?>
+			<option value="<?php echo $row['ID']; ?>" <?php echo $selected;?>><?php echo $row['Title']; ?></option>
+			<?php } ?>
+		</select>
+		</td>
+		<td>
+			Character Limit <input type="text" name="CharLimit[<?php echo $blurb['ID'];?>]" value="<?php echo ($blurb['CharLimit'] > 0) ? $blurb['CharLimit'] : '120' ?>" size="10" />
+		</td>
+		<td><a href="/admin/settings?wbid=<?php echo $blurb['ID'];?>">delete</a></td>
+	</tr>
+<?php } ?>
+	<tr>
+		<td colspan="4" align="right"><input type="submit" value="save changes" style="height:30px; width: 200px" /></td>
+	</tr>	
+</form>
+<?php } ?>
+
+<form action="/admin/settings" method="POST">
+<input type="hidden" value="1" name="widgetblurbadd" />
+	<tr>
+		<td>Add A New Blurb Widget :</td>
+		<td>
+		<select name="PageID">
+			<option value=""></option>
+			<?php
+			foreach ($this->pagetitles as $row) { ?>
+			<option value="<?php echo $row['ID']; ?>"><?php echo $row['Title']; ?></option>
+			<?php } ?>
+		</select>
+		</td>
+		<td>
+			Character Limit <input type="text" name="CharLimit" value="120" size="10" />
+		</td>
+		<td><input type="submit" value="add"  /></td>
+	</tr>
+</form>
+<table>

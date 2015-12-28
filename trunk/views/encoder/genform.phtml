@@ -1,0 +1,141 @@
+<?php 
+
+/*
+echo "<pre>";
+print_r($this->genform);
+echo "</pre>";
+*/
+
+//echo "<pre>";
+//print_r($this->disable_input);
+//echo "</pre>";
+
+?>
+
+<h3>Data Entry</h3>
+
+<h4>for table '<i><?php echo $this->table; ?></i>'</h4>
+
+
+<?php if($this->disable_input < 1 || !$this->disable_input) :  ?>
+
+<table>
+<form id="generic" action="http://<?php echo $_SERVER['HTTP_HOST']; ?>/encoder/genform/tbl/<?php echo $this->table; ?>/submit/1" method="post">
+
+<input type="hidden" name="Created" value="<?php echo Date('Y-m-d H:i:s'); ?>" />
+<input type="hidden" name="LastEdited" value="<?php echo Date('Y-m-d H:i:s'); ?>" />
+
+<?php 
+
+foreach($this->genform as $row){
+	
+	//echo "<td> <input type='hidden' name=".$row['Field']." /> </td>";
+
+	if ($row['Key'] != "PRI" ){
+	
+		if($row['Field'] != 'Created' && $row['Field'] != 'LastEdited') {
+		
+		echo "<tr>";
+		echo "<td><label for='".$row['Field']."'>".$row['Field']."</label> </td>";
+		echo "<td> <input type='text' name=".$row['Field']." /> </td>";
+		echo "</tr>";	
+		
+		}
+		
+	}
+}
+
+
+?>
+
+</table>
+
+<input type="submit" value="insert data" class="button blue" />
+</form>
+
+<hr />
+
+<?php endif; ?>
+
+
+<?php 
+if (count($this->list) > 0)
+{
+
+?>
+
+<table class="tablesorter">
+
+<thead>
+
+<tr>
+<?php 
+
+foreach ($this->genform as $row)
+{
+	
+	if ($row['Key']== "PRI"){		
+		$primary_key = $row['Field'];	
+	}
+
+	echo "<th class='header'>".$row['Field']."</th>";
+	
+}
+
+
+
+?>
+
+<th colspan="2">&nbsp;</th>
+
+</tr>
+
+</thead>
+
+	<tbody>
+<?php  
+
+foreach ($this->list as $row => $val)
+{
+	echo "<tr>";
+	foreach ($val as $kk => $vv)
+	{
+		//echo "<td>$kk</td>";
+		
+		if($kk == $primary_key)
+		{
+			$key_value = $vv;
+		}	
+	
+		echo "<td>".ucwords($vv)."</td>";
+		
+	}
+	echo "<td><a href='http://".$_SERVER['HTTP_HOST']."/encoder/genupd/tbl/".$this->table."/kn/".$primary_key."/kv/".$key_value."' class='button blue' >edit</a></td>";
+	echo "<td><a href='http://".$_SERVER['HTTP_HOST']."/encoder/gendel/tbl/".$this->table."/kn/".$primary_key."/kv/".$key_value."' class='jq_delete button orange' >del</a></td>";
+	echo "</tr>";
+}
+
+
+?>
+
+	</tbody>
+</table>
+
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+
+<?php 
+
+}
+
+else 
+
+{
+
+	echo "No results to display";
+
+}
+?>
+
+
+
+

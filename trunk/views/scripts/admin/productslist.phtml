@@ -1,0 +1,49 @@
+<h3>Products List</h3>
+
+<form action="/admin/productslist/" method="POST">
+	<input type="text" name="q" />
+	<input type="submit" value="Search" />
+</form>
+
+<p><a href="/admin/productscreate" class="button blue">Create Product</a></p>
+<p><a href="/encoder/genform/tbl/Brands" class="button blue">Create Brand</a></p>	
+<p><a href="/admin/categories" class="button blue">Create Category</a></p>
+
+<?php
+if ($this->list) {
+?>
+<table class="tablesorter" width="80%">
+<thead>
+	<tr>
+		<th>&nbsp;</th>
+		<th>Product</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+$list = $this->list;
+foreach ($list as $row => $val){
+?>
+
+	<tr>
+		<td><img src="<?php echo "/uploads/thumbs/th_".$val['Filename'];?>" height="84" width="84" alt=""> </td>
+		<td><a href="/admin/productsdisplay/pid/<?php echo $val['ID']; ?>"><?php echo $val['Name']; ?></a></td>
+		<td>
+		<a href="/admin/productsdisplay/pid/<?php echo $val['ID']; ?>/conf/1" class="button blue">Edit</a> |
+		<a href="/admin/productsdelete/pid/<?php echo $val['ID']; ?>/conf/1" class="button orange jq_delete">Delete</a></td>
+	</tr>
+<?php
+}
+?>
+</tbody>
+</table>
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+No records found.
+<?php
+}
+?>

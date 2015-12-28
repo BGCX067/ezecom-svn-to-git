@@ -1,0 +1,90 @@
+<?php //print_r($this->list); ?>
+
+<?php 
+
+/*if (count($this->list) > 0):
+	foreach ($this->list as $item=>$val):
+	
+	echo $val.' - <br />';
+	
+endforeach;	
+
+else:
+
+endif;
+*/
+
+?>
+
+<?php 
+
+if (count($this->list) > 0)
+{
+
+?>
+
+<table border="1" cellpadding="2" cellspacing="2" width="60%">
+
+<tr>
+<?php 
+
+foreach ($this->genform as $row)
+{
+	
+	if ($row['Key']== "PRI"){		
+		$primary_key = $row['Field'];	
+	}
+
+	echo "<td>".$row['Field']."</td>";
+	
+}
+
+
+
+?>
+<td colspan="2">&nbsp;</td>
+
+</tr>
+
+<?php  
+
+foreach ($this->list as $row => $val)
+{
+	echo "<tr>";
+	foreach ($val as $kk => $vv)
+	{
+		//echo "<td>$kk</td>";
+		
+		if($kk == $primary_key)
+		{
+			$key_value = $vv;
+		}	
+	
+		echo "<td>$vv</td>";
+		
+	}
+	echo "<td><a href='http://".$_SERVER['HTTP_HOST']."/encoder/genupd/tbl/".$this->table."/kn/".$primary_key."/kv/".$key_value."'>edit</a></td>";
+	echo "<td><a href='http://".$_SERVER['HTTP_HOST']."/encoder/gendel/tbl/".$this->table."/kn/".$primary_key."/kv/".$key_value."' class='jq_delete' >del</a></td>";
+	echo "</tr>";
+}
+
+
+?>
+
+
+</table>
+
+<?php 
+
+}
+
+else 
+
+{
+
+	echo "No results to display";
+
+}
+?>
+
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>

@@ -1,0 +1,77 @@
+<h3>Search Transactions</h3>
+
+<?php include("includes/transactionform.php") ;?>
+
+<?php
+if (count($this->list) > 0) { ?>
+<table class="tablesorter">
+<thead>
+	<tr>
+		<th >Transaction #</th>
+		<th >Email</th>
+		<th >Date Ordered</th>
+		<th >Due Date</th>
+		<th >Total</th>
+		<th >Status</th>
+		
+	</tr>
+</thead>
+<tbody>
+<?php foreach ($this->list as $val)  { 
+$Status = 'Pending';
+	switch ($val['Status']){
+		case 1:
+			$Status = 'Pending';
+			break;
+		case 2:
+			$Status = 'In Process';
+			break;	
+		case 3:
+			$Status = 'Shipped';
+			break;	
+		default:
+			$Status = 'Pending';
+			break;
+	}
+	
+$PaymentMethod = '';
+	switch ($val['PaymentMethod']){
+		case 1:
+			$PaymentMethod = 'GCASH';
+			break;
+		case 2:
+			$PaymentMethod = 'BDO';
+			break;			
+		case 3:
+			$PaymentMethod = 'BPI';
+			break;	
+		case 4:
+			$PaymentMethod = 'LBC';
+			break;	
+		default:
+			$PaymentMethod = '';
+			break;
+	}	
+?>	
+	<tr>
+		<td ><a href="/admin/transactiondisplay/ID/<?php echo $val['TrackingID']; ?>"><?php echo strtoupper($val['TrackingID']); ?></a></td>
+		<td ><a href="/admin/transactiondisplay/ID/<?php echo $val['TrackingID']; ?>"><?php echo $val['Email']; ?></a></td>
+		<td ><a href="/admin/transactiondisplay/ID/<?php echo $val['TrackingID']; ?>"><?php echo $val['Created']; ?></a></td>
+		<td ><a href="/admin/transactiondisplay/ID/<?php echo $val['TrackingID']; ?>"><?php echo $val['PaymentDue']; ?></a></td>
+		<td><a href="/admin/transactiondisplay/ID/<?php echo $val['TrackingID']; ?>"><?php echo number_format($val['TransactionTotal'],2); ?></a></td>
+		<td><a href="/admin/transactiondisplay/ID/<?php echo $val['TrackingID']; ?>"><?php echo $Status; ?></a></td>		
+	</tr>
+<?php } ?>	
+</tbody>
+</table>	
+
+
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+<p>No records found.</p>
+<?php
+}
+?>

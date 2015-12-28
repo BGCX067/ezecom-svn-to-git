@@ -1,0 +1,61 @@
+<h3>Search Transactions</h3>
+
+<form action="/admin/productslist/" method="POST">
+	<input type="text" name="q" />
+	<input type="submit" value="Search" />
+</form>
+
+<?php
+
+/***
+[0] => Array
+                        (
+                            [ID] => 5
+                            [Created] => 2013-05-11 15:49:49
+                            [LastEdited] => 2013-06-14 11:02:59
+                            [Name] => CANDY CONFESSIONS SATCHEL BAG
+                            [URLSegment] => candy-confessions-satchel-bag
+                            [Description] => L30cm*H22cm ...
+                            [Code] => Bag015
+                            [isFeatured] => 1
+                            [Filename] => 5_20130511155126_518df87e0cec3.jpg
+                        )
+
+***/
+if ($this->list) {
+?>
+<table class="tablesorter">
+<thead>
+	<tr>
+		<th>&nbsp;</th>
+		<th>Product</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+$list = $this->list;
+foreach ($list as $row => $val){
+?>
+
+	<tr>
+		<td><img src="<?php echo "/uploads/thumbs/th_".$val['Filename'];?>" height="84" width="84" alt=""> </td>
+		<td><a href="/admin/productsdisplay/pid/<?php echo $val['ID']; ?>"><?php echo $val['Name']; ?></a></td>
+		<td>
+		<a href="/admin/productsdisplay/pid/<?php echo $val['ID']; ?>/conf/1" class="button blue">Edit</a> |
+		<a href="/admin/productsdelete/pid/<?php echo $val['ID']; ?>/conf/1" class="button orange jq_delete">Delete</a></td>
+	</tr>
+<?php
+}
+?>
+</tbody>
+</table>
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+No records found.
+<?php
+}
+?>

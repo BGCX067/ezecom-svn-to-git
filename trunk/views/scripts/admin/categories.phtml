@@ -1,0 +1,88 @@
+<?php
+$data = $this->data; 
+//echo '<pre>'; print_r($data); exit;
+$parentpages = $this->parentcategories;
+
+$heading = isset($data['ID']) ? "Edit Category" : "Create Category";
+?>
+<h2><?php echo $heading; ?></h2>
+<form action="" method="POST">
+	<?php 
+	if (isset($data['ID']) ) { ?>
+	<input type="hidden" name="ID" value="<?php echo $date = ( isset($data['ID']) ? $data['ID'] : '' ); ?>" />
+	<?php } ?>
+	<input type="hidden" name="Created" value="<?php echo $date = ( isset($data['Created']) ? $data['Created'] : Date('Y-m-d H:i:s')); ?>" />
+	<input type="hidden" name="LastEdited" value="<?php echo Date('Y-m-d H:i:s'); ?>" />
+	
+	<table>
+	<tr>
+		<td><label for="Name">Name</label></td>
+		<td><input type="text" size="100" name="Name" value="<?php echo $Name = (isset($data['Name'])) ? $data['Name'] : '' ;?>" /></td>
+	</tr>	
+	<tr>
+		<td><label for="isPrimary">isPrimary</label></td>
+		<td>
+			<?php $checked = ($data['isPrimary']== 1) ? 'checked' : ''; ?>
+			<input type="checkbox" name="isPrimary" <?php echo $checked; ?> />
+		</td>
+	</tr>	
+	<tr>
+		<td><label for="ParentID">Parent Category</label></td>
+		<td>
+			<select name="ParentID">
+				<option value="">No Parent</option>
+				<?php foreach ($parentpages as $row) { 
+				$selected =  ( $row['ID'] == $data['ParentID'] ? "selected='selected'" : "" ) ; 
+				?> 
+				<option value="<?php echo $row['ID'];?>"  <?php echo $selected; ?> /><?php echo strtoupper($row['Name']); ?></option>
+				<?php } 
+				$selected = "";
+				?> 
+			</select>
+		</td>
+	</tr>
+	
+	</table>
+	
+	<input type="submit" class="button blue" value="Save Changes" />
+</form>
+
+
+<?php
+if ($this->list) {
+?>
+<table class="tablesorter">
+<thead>
+	<tr>
+		<th>Name</th>
+		<th>isPrimary</th>
+		<th>&nbsp;</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+$list = $this->list;
+foreach ($list as $row => $val){
+?>
+	<tr>
+		<td><?php echo $val['Name'];?></td>
+		<td><?php echo $val['isPrimary'];?></td>
+		<td>
+			<a href="/admin/categories/edit/<?php echo $val['ID']; ?>/conf/1" class="button blue">Edit</a> |
+			<a href="/admin/categories/delete/<?php echo $val['ID']; ?>/conf/1" class="button orange jq_delete">Delete</a>
+		</td>
+	</tr>
+<?php
+}
+?>
+</tbody>
+</table>
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+No records found.
+<?php
+}
+?>

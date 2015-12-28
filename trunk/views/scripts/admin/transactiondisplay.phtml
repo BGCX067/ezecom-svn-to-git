@@ -1,0 +1,134 @@
+<?php
+$data = $this->data; //echo '<pre>'; print_r($data); exit; 
+$payment_methods = $this->payment_methods;
+?>
+<h3>Transaction # : <?php if($data[0]['ID']) { echo strtoupper($data[0]['ID']);} ?></h3>
+<?php if($data[0]['Created']) { echo ($data[0]['Created']);} ?>
+
+<?php
+if($data[0]['Status'] == 3) {
+?>
+	<div class="box-gray">
+		<h2>You have shipped the items in this transaction.</h2>
+	</div>
+<?php	
+}
+?>
+
+<table class="tablesorter" width="50%">
+<thead>
+	<tr>
+		<th>Item</th>
+		<th>Item Code</th>
+		<th>Price</th>
+		<th>Quantity</th>		
+		<th>Sub Total</th>
+	</tr>
+</thead>
+<tbody>
+<?php
+foreach ($data as $row) {
+?>
+	<tr>
+		<td><?php echo strtoupper($row['ProductName']); ?></td>
+		<td><?php echo strtoupper($row['Code']); ?></td>
+		<td align="right"><?php echo strtoupper($row['Price']); ?></td>
+		<td align="right"><?php echo strtoupper($row['Quantity']); ?></td>		
+		<td align="right"><?php echo number_format($row['SubTotal'],2); ?></td>
+	</tr>
+<?php
+}
+?>
+	<tr>
+		<td colspan="4" align="right">Store Credits Used</td>
+		<td align="right"><strong style="color:red">- <?php echo number_format($data[0]['StoreCreditsUsed'],2); ?></strong></td>
+	</tr>
+	<tr>
+		<td colspan="4">&nbsp;</td>
+		<td align="right"><strong><?php echo number_format($row['TransactionTotal'],2); ?></strong></td>
+	</tr>
+</tbody>
+</table>
+
+
+<p><?php #echo $payment_methods[1]; echo $data[0]['PaymentDetails']; ?></p>
+<p><strong>Payment Information</strong></p>
+<table class="tablesorter" width="50%">
+<thead>
+	<tr>
+		<th>Payment Method</th>
+		<th>Payment Date</th>
+		<th>Reference No.</th>
+	</tr>
+</thead>
+	<tr>
+		<td><?php echo $payment_methods[ $data[0]['PaymentMethod'] ]; ?></td>
+		<td><?php echo $data[0]['PaymentDate']; ?></td>	
+		<td><?php echo $data[0]['PaymentDetails']; ?></td>
+	</tr>
+</table>
+
+
+
+
+<form action="/admin/transactiondisplay/" method="POST">
+	<input type="hidden" name="TransactionID" value="<?php echo $data[0]['ID'];?>" />
+	
+<p><strong>Shipping Information</strong></p>
+<table class="tablesorter" width="50%">
+<thead>
+	<tr>
+		<th>&nbsp;</th>
+		<th>Details</th>
+	</tr>
+</thead>
+<tbody>
+	<tr>
+		<td>Transaction #: </td>
+		<td><?php echo strtoupper($row['ID']) ; ?></td>
+	</tr>
+	<tr>
+		<td>Consignee: </td>
+		<td><?php echo strtoupper($data[0]['Firstname']).' '.strtoupper($row['Lastname']); ?></td>
+	</tr>
+	<tr>
+		<td>Shipping Address: </td>
+		<td><?php echo $data[0]['ShippingAddress']; ?></td>
+	</tr>
+	<tr>
+		<td>Email:</td>
+		<td><?php echo $data[0]['Email']; ?></td>
+	</tr>
+	<tr>
+		<td>Phone:</td>
+		<td><?php echo $data[0]['Phone']; ?></td>
+	</tr>
+	
+	<tr>
+		<td>Tracking Code: </td>
+		<td>
+			<input type="text" name="ShippingCode" value="<?php echo (isset($data[0]['ShippingCode'])) ? $data[0]['ShippingCode']: '' ; ?>" />
+		</td>
+	</tr>	
+	<tr>
+		<td>Status:</td>
+		<td>
+			<select name="Status">
+			<?php foreach ($this->status_list as $row => $val) {
+				$selected = ($data[0]['Status'] == $row) ? 'selected="selected"' : '' ; 
+			?>
+				<option value="<?php echo $row; ?>" <?php echo $selected; ?>> <?php echo $val; ?></option>
+			<?php } ?>	
+			</select>
+			<input type="submit" />
+			
+		</td>
+	</tr>
+	
+</tbody>
+</table>
+</form>
+
+
+
+

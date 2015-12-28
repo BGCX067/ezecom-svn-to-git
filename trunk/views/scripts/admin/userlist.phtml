@@ -1,0 +1,40 @@
+<h3>Users</h3>
+
+<?php #include("includes/transactionform.php") ;?>
+
+<?php
+if (count($this->list) > 0) {
+?>
+<table class="tablesorter" width="100%">
+<thead>
+	<tr>
+		<th >Email</th>
+		<th >First Name</th>
+		<th >Last Name</th>
+		
+	</tr>
+</thead>
+<tbody>
+<?php
+$list = $this->list;
+foreach ($list as $row => $val){
+?>
+	<tr>
+		<td ><a href="/admin/userdisplay/ID/<?php echo $val['ID']; ?>"><?php echo $val['SiteEmail']; ?></a></td>
+		<td ><a href="/admin/userdisplay/ID/<?php echo $val['ID']; ?>"><?php echo $val['Firstname']; ?></a></td>
+		<td ><a href="/admin/userdisplay/ID/<?php echo $val['ID']; ?>"><?php echo $val['Lastname']; ?></a></td>		
+	</tr>
+<?php
+}
+?>
+</tbody>
+</table>
+<?php echo $this->paginationControl($this->list, 'Sliding', 'pagination.phtml'); ?>
+<?php
+}
+else {
+?>	
+No records found.
+<?php
+}
+?>

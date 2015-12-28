@@ -1,0 +1,17 @@
+<?php
+
+$data = $this->data;
+?>
+
+<h3>Edit Banners</h3>
+
+<form id="imageform" method="POST" enctype="multipart/form-data" action="/admin/banners/edit/<?php echo $data[0]['ID']; ?>">
+	<input type="hidden" name="ID" value="<?php echo $data[0]['ID'];?>" />
+	<p>Title : <input type="text" size="60" name="Title" value="<?php echo $data[0]['Title']; ?>" /></p>
+	<p>Link : <input type="text" size="60" name="URLSegment" value="<?php echo $data[0]['URLSegment']; ?>" /></p>
+	<p>Order : <input type="text" size="60" name="CustomOrder" value="<?php echo $data[0]['CustomOrder']; ?>" /></p>
+	<p><input type="submit" value="Save Changes" class="button blue" /></p>
+</form>	
+
+<img src="/uploads/thumbs/th_<?php echo $data[0]['Filename']; ?>" />
+
